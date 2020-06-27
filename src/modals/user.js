@@ -37,7 +37,14 @@ userSchema.statics.getCredentials = async function (email, password) {
   if (isMatch) return user;
   else return { error: true, message: 'Password is wrong!' };
 };
-
+userSchema.statics.checkIfUseAlreadyExist = async (email) => {
+  try {
+    let user = await User.findOne({ email });
+    if (user) throw { error: true, message: 'User already exist' };
+  } catch (error) {
+    throw error;
+  }
+};
 //Methods
 userSchema.methods.generateTokenId = async function () {
   const user = this;
@@ -46,7 +53,9 @@ userSchema.methods.generateTokenId = async function () {
     user.tokens = user.tokens.concat({ token });
     user.save();
     return { user, token };
-  } catch (error) {}
+  } catch (error) {
+    throw error;
+  }
 };
 
 userSchema.pre('save', async function (next) {
@@ -57,6 +66,6 @@ userSchema.pre('save', async function (next) {
   next();
 });
 
-let User = new mongoose.model('User', userSchema);
+let User = new mongoose.model('users', userSchema);
 
 module.exports = User;

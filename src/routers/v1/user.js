@@ -12,13 +12,14 @@ router.post('/register', async (req, res) => {
         email,
         password,
       });
+      await User.checkIfUseAlreadyExist(email);
       let data = await user.generateTokenId();
       res.send({ success: true, token: data.token });
     } else {
       res.send({ error: true, message: 'Empty data' });
     }
   } catch (error) {
-    res.send({ error });
+    res.send(error);
   }
 });
 
