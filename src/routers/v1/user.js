@@ -1,7 +1,7 @@
 const express = require('express');
-const User = require('../modals/user');
+const User = require('../../modals/user');
 const router = new express.Router();
-const auth = require('../middleware/auth');
+const auth = require('../../middleware/auth');
 
 router.post('/register', async (req, res) => {
   try {
