@@ -35,7 +35,7 @@ router.get('/roasts/:id', auth, async (req, res) => {
   try {
     const _id = req.params.id;
     const user = req.user;
-    let data = Roast.findOne({ _id, userId: user._id });
+    let data = await Roast.findOne({ _id, userId: user._id });
     if (!data) throw { error: true, message: 'Task not found!' };
     else res.send({ success: true, data });
   } catch (error) {
