@@ -1,35 +1,20 @@
 const mongoose = require('mongoose');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 
-const userSchema = mongoose.Schema({
-  name: {
+const roastSchema = mongoose.Schema({
+  title: {
     type: String,
     require: true,
   },
-  email: {
-    type: String,
-    require: true,
-    unique: true,
-  },
-  password: {
+  description: {
     type: String,
     require: true,
   },
-  status: {
+  userId: {
+    type: String,
     require: true,
-    type: Number,
   },
-  tokens: [
-    {
-      token: {
-        type: String,
-        require: true,
-      },
-    },
-  ],
 });
 
-let User = new mongoose.model('User', userSchema);
+let Roast = new mongoose.model('roasts', roastSchema);
 
-module.exports = User;
+module.exports = Roast;
