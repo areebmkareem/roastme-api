@@ -2,33 +2,38 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
-const userSchema = mongoose.Schema({
-  name: {
-    type: String,
-    require: true,
-  },
-  email: {
-    type: String,
-    require: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    require: true,
-  },
-  status: {
-    require: true,
-    type: Number,
-  },
-  tokens: [
-    {
-      token: {
-        type: String,
-        require: true,
-      },
+const userSchema = mongoose.Schema(
+  {
+    name: {
+      type: String,
+      require: true,
     },
-  ],
-});
+    email: {
+      type: String,
+      require: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      require: true,
+    },
+    status: {
+      require: true,
+      type: Number,
+    },
+    tokens: [
+      {
+        token: {
+          type: String,
+          require: true,
+        },
+      },
+    ],
+  },
+  {
+    timestamps: true,
+  }
+);
 
 userSchema.statics.getCredentials = async function (email, password) {
   let user = await User.findOne({ email });

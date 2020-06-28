@@ -1,19 +1,24 @@
 const mongoose = require('mongoose');
 
-const roastSchema = mongoose.Schema({
-  title: {
-    type: String,
-    require: true,
+const roastSchema = mongoose.Schema(
+  {
+    title: {
+      type: String,
+      require: true,
+    },
+    description: {
+      type: String,
+      require: true,
+    },
+    userId: {
+      type: String,
+      require: true,
+    },
   },
-  description: {
-    type: String,
-    require: true,
-  },
-  userId: {
-    type: String,
-    require: true,
-  },
-});
+  {
+    timestamps: true,
+  }
+);
 
 let Roast = new mongoose.model('roasts', roastSchema);
 
