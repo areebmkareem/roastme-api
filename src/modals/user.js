@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { sendWelcomeEmail } = require('../emils/account');
 
 const userSchema = mongoose.Schema(
   {
@@ -69,6 +70,11 @@ userSchema.pre('save', async function (next) {
   if (user.isModified('password')) user.password = await bcrypt.hash(user.password, 8);
 
   next();
+});
+
+userSchema.post('save', function (doc) {
+  console.log('%s has been saved', doc);
+  sendWelcomeEmail(doc.email, doc.name);
 });
 
 let User = new mongoose.model('users', userSchema);
