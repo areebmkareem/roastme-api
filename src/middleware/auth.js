@@ -14,7 +14,7 @@ const auth = asyncMiddleware(async (req, res, next) => {
       req.token = token;
       next();
     } else throw 'User not found';
-  } else 'token expired';
+  } else throw 'token expired';
 });
 
 module.exports = auth;
