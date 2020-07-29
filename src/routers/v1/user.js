@@ -36,6 +36,7 @@ router.get(
   '/logout',
   auth,
   asyncMiddleware(async (req, res) => {
+    console.log('helllo');
     let { user, token } = req;
     user.tokens = user.tokens.filter((data) => data.token !== token);
     user.save();
