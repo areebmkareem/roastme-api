@@ -18,9 +18,7 @@ router.post(
       await User.checkIfUseAlreadyExist(email);
       let data = await user.generateTokenId();
       res.send({ success: true, token: data.token });
-    } else {
-      res.send({ error: true, message: 'Empty data' });
-    }
+    } else throw 'Empty data';
   })
 );
 
@@ -29,14 +27,12 @@ router.post(
   asyncMiddleware(async (req, res) => {
     const { email, password } = req.body;
     let response = await User.getCredentials(email, password);
-    if (!response.error) {
-      let data = await response.generateTokenId();
-      res.send({ success: true, token: data.token });
-    } else res.send(response);
+    let data = await response.generateTokenId();
+    res.send({ success: true, token: data.token });
   })
 );
 
-router.post(
+router.get(
   '/logout',
   auth,
   asyncMiddleware(async (req, res) => {

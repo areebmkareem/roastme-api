@@ -13,8 +13,8 @@ const auth = asyncMiddleware(async (req, res, next) => {
       req.user = user;
       req.token = token;
       next();
-    } else res.send({ error: true, message: 'User not found' });
-  } else res.send({ error: true, message: 'token expired' });
+    } else throw 'User not found';
+  } else 'token expired';
 });
 
 module.exports = auth;
