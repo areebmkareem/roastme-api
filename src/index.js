@@ -1,8 +1,10 @@
+require('express-async-errors');
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const { mongoose } = require('./db/mongoose');
+require('./db/mongoose');
 const user = require('./routers/v1/user');
 const errors = require('./middleware/error');
 const port = process.env.PORT;

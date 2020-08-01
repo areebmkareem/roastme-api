@@ -1,7 +1,6 @@
 const jwt = require('jsonwebtoken');
 const User = require('../modals/user');
-const asyncMiddleware = require('./async');
-const auth = asyncMiddleware(async (req, res, next) => {
+const auth = async (req, res, next) => {
   const token = req.header('token');
   let decoded = jwt.verify(token, process.env.JWT_SECRET);
   if (decoded) {
@@ -15,6 +14,6 @@ const auth = asyncMiddleware(async (req, res, next) => {
       next();
     } else throw 'User not found';
   } else throw 'token expired';
-});
+};
 
 module.exports = auth;
