@@ -1,7 +1,7 @@
 const express = require('express');
 const router = new express.Router();
 
-const User = require('../../modals/user');
+const User = require('../../models/user');
 const auth = require('../../middleware/auth');
 
 router.post('/register', async (req, res) => {
@@ -26,7 +26,6 @@ router.post('/login', async (req, res) => {
 });
 
 router.get('/logout', auth, async (req, res) => {
-  console.log('helllo');
   let { user, token } = req;
   user.tokens = user.tokens.filter((data) => data.token !== token);
   user.save();
