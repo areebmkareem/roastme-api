@@ -37,16 +37,20 @@ const userSchema = mongoose.Schema(
 );
 
 userSchema.statics.getCredentials = async function (email, password) {
-  let user = await User.findOne({ email });
-  if (!user) return { error: true, message: 'User not found!' };
-  let isMatch = await bcrypt.compare(password, user.password);
-  if (isMatch) return user;
-  else return { error: true, message: 'Password is wrong!' };
+  try {
+    let user = await User.findOne({ email });
+    if (!user) throw 'User not found!';
+    let isMatch = await bcrypt.compare(password, user.password);
+    if (isMatch) return user;
+    else throw 'Email / Password is wrong!';
+  } catch (err) {
+    throw err;
+  }
 };
 userSchema.statics.checkIfUseAlreadyExist = async (email) => {
   try {
     let user = await User.findOne({ email });
-    if (user) throw { error: true, message: 'User already exist' };
+    if (user) throw 'User already exist';
   } catch (error) {
     throw error;
   }
