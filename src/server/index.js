@@ -4,9 +4,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-require('./db/mongoose');
-const user = require('./routers/v1/user');
-const error = require('./middleware/error');
+require('../db/mongoose');
+const user = require('../routers/v1/user');
+const error = require('../controllers/error');
 const port = process.env.PORT;
 
 const app = express();

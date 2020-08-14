@@ -1,7 +1,7 @@
 const express = require('express');
 const Comment = require('../../modals/comment');
 const router = new express.Router();
-const auth = require('../../middleware/auth');
+const auth = require('../../controllers/auth');
 const { uniqueNamesGenerator, adjectives, animals } = require('unique-names-generator');
 
 router.post('/comments', auth, async (req, res) => {

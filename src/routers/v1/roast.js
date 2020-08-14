@@ -1,7 +1,7 @@
 const express = require('express');
 const Roast = require('../../modals/roast');
 const router = new express.Router();
-const auth = require('../../middleware/auth');
+const auth = require('../../controllers/auth');
 
 router.post('/roasts', auth, async (req, res) => {
   try {
