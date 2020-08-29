@@ -1,12 +1,16 @@
 const express = require('express');
 const router = new express.Router();
+const validator = require('validator');
 
 const User = require('../../models/user');
 const auth = require('../../controllers/auth');
 
-router.post('/register', async (req, res) => {
+router.post('/users', async (req, res) => {
   const { name, password, email } = req.body;
-  if (name && password && email) {
+  const isEmail = validator.isEmail(email);
+  const hasRequiredFields = name && password && email;
+  if (!isEmail) throw 'Invalid email address';
+  if (hasRequiredFields) {
     let user = new User({
       name,
       email,
@@ -14,15 +18,19 @@ router.post('/register', async (req, res) => {
     });
     await User.checkIfUseAlreadyExist(email);
     let data = await user.generateTokenId();
-    res.send({ success: true, token: data.token });
+    res.send({ success: true, data: { token: data.token } });
   } else throw 'Empty data';
+});
+
+router.get('/user', auth, async (req, res) => {
+  res.send({ success: true, data: req.user });
 });
 
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   let response = await User.getCredentials(email, password);
   let data = await response.generateTokenId();
-  res.send({ success: true, token: data.token });
+  res.send({ success: true, data: { token: data.token } });
 });
 
 router.get('/logout', auth, async (req, res) => {

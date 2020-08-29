@@ -7,26 +7,26 @@ const userSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      require: true,
+      required: true,
     },
     email: {
       type: String,
-      require: true,
+      required: true,
       unique: true,
     },
     password: {
       type: String,
-      require: true,
+      required: true,
     },
     status: {
-      require: true,
+      // required: true,
       type: Number,
     },
     tokens: [
       {
         token: {
           type: String,
-          require: true,
+          required: true,
         },
       },
     ],
@@ -77,8 +77,7 @@ userSchema.pre('save', async function (next) {
 });
 
 userSchema.post('save', function (doc) {
-  console.log('%s has been saved', doc);
-  sendWelcomeEmail(doc.email, doc.name);
+  // sendWelcomeEmail(doc.email, doc.name);
 });
 
 let User = new mongoose.model('users', userSchema);
