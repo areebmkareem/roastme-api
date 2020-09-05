@@ -1,13 +1,15 @@
 require('express-async-errors');
-
+require('../db/mongoose');
 const express = require('express');
+const winston = require('winston');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-
-require('../db/mongoose');
 const user = require('../routers/v1/user');
 const track = require('../routers/v1/track');
 const error = require('../controllers/error');
+
+winston.add(winston.transports.File, { filename: 'logfile.log' });
+
 const port = process.env.PORT;
 
 const app = express();
