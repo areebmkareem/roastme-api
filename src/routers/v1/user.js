@@ -60,7 +60,7 @@ router.post('/login', async (req, res) => {
   const {email, password} = req.body;
   let response = await User.getCredentials(email, password);
   let data = await response.generateTokenId();
-  res.send({success: true, data: {token: data.token}});
+  res.send({success: true, data});
 });
 
 router.get('/logout', auth, async (req, res) => {
