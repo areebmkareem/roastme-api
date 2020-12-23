@@ -8,6 +8,12 @@ const sendVerificationEmail = require('../../emails/account').sendVerificationEm
 const generateOtp = require('../../helper/generateOtp');
 const {getResponseMessage, getErrorMessages} = require('../../constants');
 
+/**
+ * @api {get} /register Register New User
+ * @apiVersion 1.0.0
+ * @apiName CreateUser
+ * @apiGroup Users
+ */
 router.post('/register', async (req, res) => {
   const {name, password, email} = req.body;
   const isEmail = validator.isEmail(email);

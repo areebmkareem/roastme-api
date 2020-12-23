@@ -28,6 +28,7 @@
     "winston": "^3.3.3"
   },
   "devDependencies": {
+    "apidoc": "^0.25.0",
     "dotenv": "^8.2.0",
     "nodemon": "^1.18.9"
   }
