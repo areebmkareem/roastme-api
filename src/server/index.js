@@ -21,13 +21,13 @@ const limiter = rateLimit({
 });
 
 //  apply to all requests
-app.use(limiter);
 
 const port = process.env.PORT;
 
 const app = express();
 
 app.use(cors());
+app.use(limiter);
 
 app.use(bodyParser.json());
 app.use('/api/v1', user);
