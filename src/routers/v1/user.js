@@ -4,8 +4,9 @@ const validator = require('validator');
 
 const User = require('../../models/user');
 const auth = require('../../controllers/auth');
+const { getResponseMessage,getErrorMessages } = require('../../constants');
 
-router.post('/users', async (req, res) => {
+router.post('/register', async (req, res) => {
   const { name, password, email } = req.body;
   const isEmail = validator.isEmail(email);
   const hasRequiredFields = name && password && email;
@@ -16,10 +17,9 @@ router.post('/users', async (req, res) => {
       email,
       password,
     });
-    await User.checkIfUseAlreadyExist(email);
     let data = await user.generateTokenId();
-    res.send({ success: true, data: { token: data.token } });
-  } else throw 'Empty data';
+    res.send({ success: true, message:getResponseMessage.registered });
+  } else throw getErrorMessages.requiredFields;
 });
 
 router.get('/user', auth, async (req, res) => {
