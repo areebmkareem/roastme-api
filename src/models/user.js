@@ -23,6 +23,15 @@ const userSchema = mongoose.Schema(
       // required: true,
       type: Number,
     },
+    otp: {
+      value: {type: Number, required: false},
+      createdAt: {type: Date, required: false},
+    },
+    isEmailVerified: {
+      type: Boolean,
+      default: false,
+    },
+
     tokens: [
       {
         token: {
@@ -50,9 +59,21 @@ userSchema.statics.getCredentials = async function (email, password) {
 };
 
 //Methods
-userSchema.methods.generateTokenId = async function () {
-  const user = this;
+userSchema.methods.toJSON = function () {
   try {
+    const excludeKeys = ['password', 'tokens', 'otp', 'createdAt', 'updatedAt'];
+    const user = this;
+    const userObject = user.toObject();
+    excludeKeys.forEach((key) => delete userObject[key]);
+    return userObject;
+  } catch (error) {
+    throw error;
+  }
+};
+
+userSchema.methods.generateTokenId = async function () {
+  try {
+    const user = this;
     let token = await jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET);
     user.tokens = user.tokens.concat({token});
     return {user, token};
