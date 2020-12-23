@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const {sendWelcomeEmail} = require('../emails/account');
+const {error} = require('winston');
 
 const userSchema = mongoose.Schema(
   {
@@ -54,7 +55,6 @@ userSchema.methods.generateTokenId = async function () {
   try {
     let token = await jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET);
     user.tokens = user.tokens.concat({token});
-    user.save();
     return {user, token};
   } catch (error) {
     throw error;
@@ -65,7 +65,7 @@ userSchema.pre('save', async function (next) {
   try {
     const user = this;
     const userExist = await User.findOne({email: user.email});
-    if (userExist) throw 'User already exist';
+    if (userExist) throw new Error('User already exist');
     if (user.isModified('password')) user.password = await bcrypt.hash(user.password, 8);
     next();
   } catch (error) {
