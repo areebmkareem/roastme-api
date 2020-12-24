@@ -5,7 +5,7 @@
   "main": "index.js",
   "apidoc": {
     "title": "Custom apiDoc browser title",
-    "url": "https://api.github.com/v1"
+    "url": "https://warm-earth-10100.herokuapp.com/api/v1"
   },
   "scripts": {
     "start": "node src/server/index.js",

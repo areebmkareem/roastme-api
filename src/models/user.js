@@ -6,7 +6,11 @@ const {error} = require('winston');
 
 const userSchema = mongoose.Schema(
   {
-    name: {
+    fullName: {
+      type: String,
+      required: true,
+    },
+    userName: {
       type: String,
       required: true,
     },
@@ -23,6 +27,7 @@ const userSchema = mongoose.Schema(
       // required: true,
       type: Number,
     },
+    profileImage: String,
     otp: {
       value: {type: Number, required: false},
       createdAt: {type: Date, required: false},
@@ -31,7 +36,7 @@ const userSchema = mongoose.Schema(
       type: Boolean,
       default: false,
     },
-
+    contacts: [String],
     tokens: [
       {
         token: {

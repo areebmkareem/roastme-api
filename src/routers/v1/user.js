@@ -4,20 +4,24 @@ const validator = require('validator');
 
 const User = require('../../models/user');
 const auth = require('../../controllers/auth');
+const isEmailVerified = require('../../controllers/emailVerified');
 const sendVerificationEmail = require('../../emails/account').sendVerificationEmail;
 const generateOtp = require('../../helper/generateOtp');
 const {getResponseMessage, getErrorMessages} = require('../../constants');
 
 /**
- * @api {get} /register Register New User
- * @apiVersion 1.0.0
- * @apiName CreateUser
+ * @api {POST} /register Register New User
  * @apiGroup Users
+ * @apiName CreateUser
+ * @apiParam {String} fullName      Mandatory Fullname.
+ * @apiParam {String} userName      Mandatory Lastname.
+ * @apiParam {String} password      Mandatory Password.
+ * @apiParam {String} email         Mandatory Email.
  */
 router.post('/register', async (req, res) => {
-  const {name, password, email} = req.body;
+  const {fullName, userName, password, email} = req.body;
   const isEmail = validator.isEmail(email);
-  const hasRequiredFields = name && password && email;
+  const hasRequiredFields = userName && fullName && password && email;
   if (!isEmail) throw 'Invalid email address';
   if (hasRequiredFields) {
     const otp = {
@@ -25,7 +29,8 @@ router.post('/register', async (req, res) => {
       createdAt: new Date(),
     };
     let user = new User({
-      name,
+      fullName,
+      userName,
       email,
       password,
       otp,
@@ -38,9 +43,24 @@ router.post('/register', async (req, res) => {
   } else throw getErrorMessages.requiredFields;
 });
 
-router.get('/user', auth, async (req, res) => {
+/**
+ * @api {GET} /user Get User Details
+ * @apiGroup Users
+ * @apiName GetUserDetails
+ * @apiHeader {String} token  Mandatory users unique token.
+ */
+
+router.get('/user', auth, isEmailVerified, async (req, res) => {
   res.send({success: true, data: req.user});
 });
+
+/**
+ * @api {POST} /verify-otp Verify Email With OTP
+ * @apiGroup Users
+ * @apiName VerifyEmailByOTP
+ * @apiParam {String}  otp     Mandatory OTP.
+ * @apiHeader {String} token  Mandatory users unique token.
+ */
 
 router.post('/verify-otp', auth, async (req, res) => {
   const user = req.user;
@@ -62,12 +82,27 @@ router.post('/verify-otp', auth, async (req, res) => {
   } else res.send({success: true, message: 'Invalid OTP Code.'});
 });
 
+/**
+ * @api {POST} /login Login User With Email and Password
+ * @apiGroup Users
+ * @apiName SignInWithEmailAndPassword
+ * @apiParam {String}  email     Mandatory Email.
+ * @apiParam {String}  password  Mandatory Password.
+ */
+
 router.post('/login', async (req, res) => {
   const {email, password} = req.body;
   let response = await User.getCredentials(email, password);
   let data = await response.generateTokenId();
   res.send({success: true, data});
 });
+
+/**
+ * @api {GET} /logout Logout User
+ * @apiGroup Users
+ * @apiName LogoutUser
+ * @apiHeader {String} token  Mandatory users unique token.
+ */
 
 router.get('/logout', auth, async (req, res) => {
   let {user, token} = req;

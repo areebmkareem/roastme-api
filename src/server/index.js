@@ -4,8 +4,7 @@ const express = require('express');
 const winston = require('winston');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const user = require('../routers/v1/user');
-const track = require('../routers/v1/track');
+const routes = require('../routers/v1');
 const error = require('../controllers/error');
 const rateLimit = require('express-rate-limit');
 
@@ -31,9 +30,9 @@ app.use(limiter);
 app.set('trust proxy', 1);
 
 app.use(bodyParser.json());
-app.use('/api/v1', user);
+routes.forEach((route) => {
+  app.use('/api/v1', route);
+});
 app.use(error);
 
-app.listen(port, () => {
-  console.log(`🚀 Started On Port ${port}`);
-});
+app.listen(port, () => {});
