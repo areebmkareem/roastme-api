@@ -4,13 +4,14 @@ const validator = require('validator');
 
 const User = require('../../models/user');
 const auth = require('../../controllers/auth');
+const checkRequiredFields = require('../../helper/checkRequiredFields');
 const isEmailVerified = require('../../controllers/emailVerified');
 const sendVerificationEmail = require('../../emails/account').sendVerificationEmail;
 const generateOtp = require('../../helper/generateOtp');
 const {getResponseMessage, getErrorMessages} = require('../../constants');
 
 /**
- * @api {POST} /register Register New User
+ * @api {POST} /register Create New User
  * @apiGroup Users
  * @apiName CreateUser
  * @apiParam {String} fullName      Mandatory Fullname.
@@ -19,28 +20,28 @@ const {getResponseMessage, getErrorMessages} = require('../../constants');
  * @apiParam {String} email         Mandatory Email.
  */
 router.post('/register', async (req, res) => {
+  checkRequiredFields(['fullName', 'userName', 'password', 'email'], req.body);
+
   const {fullName, userName, password, email} = req.body;
   const isEmail = validator.isEmail(email);
-  const hasRequiredFields = userName && fullName && password && email;
-  if (!isEmail) throw 'Invalid email address';
-  if (hasRequiredFields) {
-    const otp = {
-      value: generateOtp(),
-      createdAt: new Date(),
-    };
-    let user = new User({
-      fullName,
-      userName,
-      email,
-      password,
-      otp,
-    });
 
-    let data = await user.generateTokenId();
-    await data.user.save();
-    sendVerificationEmail(user.email, user.name, user.otp.value);
-    res.send({success: true, data, message: getResponseMessage.registered});
-  } else throw getErrorMessages.requiredFields;
+  if (!isEmail) throw 'Invalid email address';
+  const otp = {
+    value: generateOtp(),
+    createdAt: new Date(),
+  };
+  let user = new User({
+    fullName,
+    userName,
+    email,
+    password,
+    otp,
+  });
+
+  let data = await user.generateTokenId();
+  await data.user.save();
+  sendVerificationEmail(user.email, user.name, user.otp.value);
+  res.send({success: true, data, message: getResponseMessage.registered});
 });
 
 /**

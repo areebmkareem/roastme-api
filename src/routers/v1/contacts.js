@@ -23,10 +23,9 @@ router.get('/contacts', auth, isEmailVerified, async (req, res) => {
     limit: parseInt(query.limit) || defaultLimit,
     skip: parseInt(query.skip) || defaultSkip,
   };
-  let data = {
-    ...options,
-  };
+  let data = {};
   data.contacts = await User.find({_id: user.contacts}, projection).limit(options.limit).skip(options.skip);
+  data = {...data, ...options};
   res.send({success: true, data});
 });
 
@@ -35,6 +34,7 @@ router.get('/contacts', auth, isEmailVerified, async (req, res) => {
  * @apiGroup Contacts
  * @apiName SearchUserByUserName
  * @apiHeader {String} token  Mandatory users unique token.
+ * @apiDescription This api is in beta state you have to enter the full keyword for proper search result.
  */
 
 router.get('/contacts/:userName', auth, isEmailVerified, async (req, res) => {
@@ -46,10 +46,9 @@ router.get('/contacts/:userName', auth, isEmailVerified, async (req, res) => {
     limit: parseInt(query.limit) || defaultLimit,
     skip: parseInt(query.skip) || defaultSkip,
   };
-  let data = {
-    ...options,
-  };
+  let data = {};
   data.contacts = await User.find({userName}, projection).limit(options.limit).skip(options.skip);
+  data = {...data, ...options};
   res.send({success: true, data});
 });
 
