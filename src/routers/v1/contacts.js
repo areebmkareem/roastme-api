@@ -6,6 +6,8 @@ const ContactRequest = require('../../models/contactRequest');
 const auth = require('../../controllers/auth');
 const transactionController = require('../../controllers/transaction');
 
+const checkRequiredFields = require('../../helper/checkRequiredFields');
+
 const isEmailVerified = require('../../controllers/emailVerified');
 
 const defaultLimit = 10;
@@ -42,7 +44,6 @@ router.get('/contacts', auth, isEmailVerified, async (req, res) => {
 
 router.get('/contacts/:userName', auth, isEmailVerified, async (req, res) => {
   const userName = req.params.userName;
-  const user = req.user;
   const query = req.query;
   const projection = {isEmailVerified: 0, contacts: 0, userName: 0};
   const options = {
@@ -88,6 +89,8 @@ router.post('/contact-approve/:id', auth, isEmailVerified, async (req, res) => {
   const payload = req.body;
   const user = req.user;
   const docId = req.params.id;
+
+  checkRequiredFields(['approved'], payload);
 
   const data = await ContactRequest.findOneAndDelete({_id: docId, userId: user._id});
   if (data) {
