@@ -5,6 +5,8 @@ const Transaction = require('../../models/transaction');
 const auth = require('../../controllers/auth');
 const checkRequiredFields = require('../../helper/checkRequiredFields');
 const isEmailVerified = require('../../controllers/emailVerified');
+const contactController = require('../../controllers/contacts');
+const transactionController = require('../../controllers/transaction');
 
 const defaultLimit = 10;
 const defaultSkip = 0;
@@ -20,15 +22,31 @@ const defaultSkip = 0;
 router.post('/transaction', auth, isEmailVerified, async (req, res) => {
   let payload = req.body;
   const user = req.user;
+
+  let data;
   payload.senderId = String(user._id);
 
   checkRequiredFields(['amount', 'transactionType', 'receiverId'], payload);
 
-  let transaction = new Transaction({
-    ...payload,
-  });
+  const shouldSendRequest = !(user.contacts && user.contacts.includes(payload.receiverId));
+  const alreadyArequestOnQueue = await contactController.findContactRequest(payload.senderId, payload.receiverId);
 
-  const data = await transaction.save();
+  if (alreadyArequestOnQueue) throw new Error('Your request was considered but was not approved Yet!.');
+
+  if (shouldSendRequest) {
+    let requestPayload = {
+      requestedBy: {
+        userName: user.userName,
+        fullName: user.fullName,
+        profileImage: user.profileImage,
+        _id: user._id,
+      },
+      userId: payload.receiverId,
+      transactionDetails: payload,
+    };
+    data = await contactController.sendContactRequest(requestPayload);
+  } else data = await transactionController.createTransaction(payload);
+
   res.send({success: true, data});
 });
 
