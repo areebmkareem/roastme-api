@@ -58,6 +58,8 @@ router.post('/transaction', auth, isEmailVerified, async (req, res) => {
  */
 
 router.get('/transaction', auth, isEmailVerified, async (req, res) => {
+  const data = {};
+
   const user = req.user;
   const query = req.query;
   const projection = {};
@@ -65,12 +67,11 @@ router.get('/transaction', auth, isEmailVerified, async (req, res) => {
     limit: parseInt(query.limit) || defaultLimit,
     skip: parseInt(query.skip) || defaultSkip,
   };
-  let data = {};
-  data.transactions = await Transaction.find({$or: [{receiverId: user._id}, {senderId: user._id}]}, projection)
-    .limit(options.limit)
-    .skip(options.skip);
-
-  data = {...data, ...options};
+  const filter = {
+    $or: [{receiverId: user._id}, {senderId: user._id}],
+  };
+  data.transactions = await Transaction.find(filter, projection).limit(options.limit).skip(options.skip);
+  data.totalCount = await Transaction.estimatedDocumentCount(filter);
   res.send({success: true, data});
 });
 

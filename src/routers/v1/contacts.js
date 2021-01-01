@@ -43,16 +43,21 @@ router.get('/contacts', auth, isEmailVerified, async (req, res) => {
  */
 
 router.get('/contacts/:userName', auth, isEmailVerified, async (req, res) => {
+  const data = {};
   const userName = req.params.userName;
   const query = req.query;
   const projection = {isEmailVerified: 0, contacts: 0, userName: 0};
+
   const options = {
     limit: parseInt(query.limit) || defaultLimit,
     skip: parseInt(query.skip) || defaultSkip,
   };
-  let data = {};
-  data.contacts = await User.find({userName}, projection).limit(options.limit).skip(options.skip);
-  data = {...data, ...options};
+  const filter = {
+    userName,
+  };
+
+  data.contacts = await User.find(filter, projection).limit(options.limit).skip(options.skip);
+  data.totalCount = await User.estimatedDocumentCount(filter);
   res.send({success: true, data});
 });
 
@@ -64,15 +69,22 @@ router.get('/contacts/:userName', auth, isEmailVerified, async (req, res) => {
  */
 
 router.get('/contact-requests', auth, isEmailVerified, async (req, res) => {
+  const data = {};
+
   const user = req.user;
   const query = req.query;
   const options = {
     limit: parseInt(query.limit) || defaultLimit,
     skip: parseInt(query.skip) || defaultSkip,
   };
-  const projection = {transactionDetails: 0};
 
-  const data = await ContactRequest.find({userId: user._id}, projection).limit(options.limit).skip(options.skip);
+  const filter = {
+    userId: user._id,
+  };
+
+  const projection = {transactionDetails: 0};
+  data.contactRequests = await ContactRequest.find(filter, projection).limit(options.limit).skip(options.skip);
+  data.totalCount = await ContactRequest.estimatedDocumentCount(filter);
 
   res.send({success: true, data});
 });
