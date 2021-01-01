@@ -21,6 +21,7 @@ const defaultSkip = 0;
  */
 
 router.get('/contacts', auth, isEmailVerified, async (req, res) => {
+  const data = {};
   const user = req.user;
   const query = req.query;
   const projection = {isEmailVerified: 0, contacts: 0, userName: 0};
@@ -28,9 +29,11 @@ router.get('/contacts', auth, isEmailVerified, async (req, res) => {
     limit: parseInt(query.limit) || defaultLimit,
     skip: parseInt(query.skip) || defaultSkip,
   };
-  let data = {};
-  data.contacts = await User.find({_id: user.contacts}, projection).limit(options.limit).skip(options.skip);
-  data = {...data, ...options};
+  const filter = {
+    _id: user.contacts,
+  };
+  data.contacts = await User.find(filter, projection).limit(options.limit).skip(options.skip);
+  data.totalCount = await User.estimatedDocumentCount(filter);
   res.send({success: true, data});
 });
 
