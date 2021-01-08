@@ -66,7 +66,7 @@ router.get('/user', auth, async (req, res) => {
 
 router.post('/verify-otp', auth, async (req, res) => {
   const user = req.user;
-  const otpValidated = user.otp.value === req.body.otp;
+  const otpValidated = Number(user.otp.value) === Number(req.body.otp);
   if (user.isEmailVerified) throw new Error('User is already verified.');
   if (otpValidated) {
     const filter = {email: user.email};
