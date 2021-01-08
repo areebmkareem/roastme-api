@@ -41,7 +41,7 @@ router.post('/register', async (req, res) => {
 
   let data = await user.generateTokenId();
   await data.user.save();
-  sendVerificationEmail(user.email, user.name, user.otp.value);
+  sendVerificationEmail(user.email, user.fullName, user.otp.value);
   res.send({success: true, data, message: getResponseMessage.registered});
 });
 
