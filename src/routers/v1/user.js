@@ -52,7 +52,7 @@ router.post('/register', async (req, res) => {
  * @apiHeader {String} token  Mandatory users unique token.
  */
 
-router.get('/user', auth, isEmailVerified, async (req, res) => {
+router.get('/user', auth, async (req, res) => {
   res.send({success: true, data: req.user});
 });
 
@@ -97,7 +97,7 @@ router.post('/login', async (req, res) => {
   const isEmail = validator.isEmail(email);
   if (isEmail) {
     let response = await User.getCredentials(email, password);
-    let data = await response.generateTokenId();
+    let data = await response.generateTokenId('UPDATE');
     await data.user.save();
     res.send({success: true, data});
   } else throw new Error('Invalid Email');

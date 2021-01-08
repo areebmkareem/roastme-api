@@ -76,7 +76,7 @@ userSchema.methods.toJSON = function () {
   }
 };
 
-userSchema.methods.generateTokenId = async function () {
+userSchema.methods.generateTokenId = async function (TYPE) {
   try {
     const user = this;
     let token = await jwt.sign({_id: user._id.toString()}, process.env.JWT_SECRET);
@@ -90,6 +90,7 @@ userSchema.methods.generateTokenId = async function () {
 userSchema.pre('save', async function (next) {
   try {
     const user = this;
+    if (user._id) return;
     const userExist = await User.findOne({email: user.email});
     if (userExist) throw new Error('User already exist');
     if (user.isModified('password')) user.password = await bcrypt.hash(user.password, 8);
