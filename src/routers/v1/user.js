@@ -81,7 +81,7 @@ router.post('/verify-otp', auth, async (req, res) => {
     const response = await User.updateOne(filter, updateDoc);
     if (response.nModified) res.send({success: true, message: 'OTP verified successfully.'});
     else throw new Error('OTP verification failed');
-  } else res.send({success: true, message: 'Invalid OTP Code.'});
+  } else throw new Error('Invalid OTP Code.');
 });
 
 /**
