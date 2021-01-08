@@ -9,6 +9,7 @@ const isEmailVerified = require('../../controllers/emailVerified');
 const sendVerificationEmail = require('../../emails/account').sendVerificationEmail;
 const generateOtp = require('../../helper/generateOtp');
 const {getResponseMessage, getErrorMessages} = require('../../constants');
+const {error} = require('winston');
 
 /**
  * @api {POST} /register Create New User
@@ -93,9 +94,13 @@ router.post('/verify-otp', auth, async (req, res) => {
 
 router.post('/login', async (req, res) => {
   const {email, password} = req.body;
-  let response = await User.getCredentials(email, password);
-  let data = await response.generateTokenId();
-  res.send({success: true, data});
+  const isEmail = validator.isEmail(email);
+  if (isEmail) {
+    let response = await User.getCredentials(email, password);
+    let data = await response.generateTokenId();
+    await data.user.save();
+    res.send({success: true, data});
+  } else throw new Error('Invalid Email');
 });
 
 /**

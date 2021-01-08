@@ -57,7 +57,7 @@ userSchema.statics.getCredentials = async function (email, password) {
     if (!user) throw 'User not found!';
     let isMatch = await bcrypt.compare(password, user.password);
     if (isMatch) return user;
-    else throw 'Email / Password is wrong!';
+    else throw 'Email / Password is incorrect!';
   } catch (err) {
     throw err;
   }
