@@ -90,9 +90,10 @@ userSchema.methods.generateTokenId = async function (TYPE) {
 userSchema.pre('save', async function (next) {
   try {
     const user = this;
-    if (user._id) return;
-    const userExist = await User.findOne({email: user.email});
-    if (userExist) throw new Error('User already exist');
+    if (user.isNew) {
+      const userExist = await User.findOne({email: user.email});
+      if (userExist) throw new Error('User already exist');
+    }
     if (user.isModified('password')) user.password = await bcrypt.hash(user.password, 8);
     next();
   } catch (error) {
