@@ -51,13 +51,14 @@ router.post('/transaction', auth, isEmailVerified, async (req, res) => {
 });
 
 /**
- * @api {GET} /transaction Get User Transactions
+ * @api {GET} /transactions/:id Get User Transactions
  * @apiGroup Transactions
  * @apiName GetUserTransactions
  * @apiHeader {String} token  Mandatory users unique token.
+ * @apiHeader {String} id  Mandatory Transaction contact Id.
  */
 
-router.get('/transaction', auth, isEmailVerified, async (req, res) => {
+router.get('/transactions/:id', auth, isEmailVerified, async (req, res) => {
   const data = {};
 
   const user = req.user;
@@ -68,10 +69,17 @@ router.get('/transaction', auth, isEmailVerified, async (req, res) => {
     skip: parseInt(query.skip) || defaultSkip,
   };
   const filter = {
-    $or: [{receiverId: user._id}, {senderId: user._id}],
+    $and: [
+      {
+        $or: [{receiverId: user._id}, {senderId: user._id}],
+      },
+      {
+        $or: [{receiverId: query.id}, {senderId: query.id}],
+      },
+    ],
   };
   data.transactions = await Transaction.find(filter, projection).limit(options.limit).skip(options.skip);
-  data.totalCount = await Transaction.estimatedDocumentCount(filter);
+  data.totalCount = await Transaction.countDocuments(filter);
   res.send({success: true, data});
 });
 

@@ -32,8 +32,9 @@ router.get('/contacts', auth, isEmailVerified, async (req, res) => {
   const filter = {
     _id: user.contacts,
   };
+
   data.contacts = await User.find(filter, projection).limit(options.limit).skip(options.skip);
-  data.totalCount = await User.estimatedDocumentCount(filter);
+  data.totalCount = await User.countDocuments(filter);
   res.send({success: true, data});
 });
 
