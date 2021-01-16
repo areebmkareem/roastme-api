@@ -63,6 +63,8 @@ router.get('/transactions/:id', auth, isEmailVerified, async (req, res) => {
 
   const user = req.user;
   const query = req.query;
+  const params = req.params;
+
   const projection = {};
   const options = {
     limit: parseInt(query.limit) || defaultLimit,
@@ -74,10 +76,11 @@ router.get('/transactions/:id', auth, isEmailVerified, async (req, res) => {
         $or: [{receiverId: user._id}, {senderId: user._id}],
       },
       {
-        $or: [{receiverId: query.id}, {senderId: query.id}],
+        $or: [{receiverId: params.id}, {senderId: params.id}],
       },
     ],
   };
+
   data.transactions = await Transaction.find(filter, projection).limit(options.limit).skip(options.skip);
   data.totalCount = await Transaction.countDocuments(filter);
   res.send({success: true, data});
