@@ -11,7 +11,7 @@
     "start": "node src/server/index.js",
     "dev": "nodemon -r dotenv/config  src/server/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "document-it":"apidoc -e node_modules -i src/ -o doc/ "
+    "document-it": "apidoc -e node_modules -i src/ -o doc/ "
   },
   "author": "",
   "license": "ISC",
@@ -23,8 +23,10 @@
     "express": "^4.17.1",
     "express-async-errors": "^3.1.1",
     "express-rate-limit": "^5.2.3",
+    "handlebars": "^4.7.7",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.9.20",
+    "puppeteer": "^8.0.0",
     "validator": "^13.1.1",
     "winston": "^3.3.3"
   },
