@@ -3,58 +3,25 @@ const path = require('path');
 const puppeteer = require('puppeteer');
 const handlebars = require('handlebars');
 
-async function createPDF(data) {
+async function generatePdf(data) {
   try {
-    var templateHtml = fs.readFileSync(path.join('../HtmlTemplates', 'billing.html'), 'utf8');
+    // path.join(__dirname + '../HtmlTemplates', 'billing.html'
+    var templateHtml = fs.readFileSync(path.join(process.cwd() + '/src/HtmlTemplates', 'billing.html'), 'utf8');
     var template = handlebars.compile(templateHtml);
     var html = template(data);
-
-    var milis = new Date();
-    milis = milis.getTime();
-
-    var pdfPath = path.join('pdf', `${data.name}-${milis}.pdf`);
-
-    var options = {
-      width: '1230px',
-      headerTemplate: '<p></p>',
-      footerTemplate: '<p></p>',
-      displayHeaderFooter: false,
-      margin: {
-        top: '10px',
-        bottom: '30px',
-      },
-      printBackground: true,
-      path: pdfPath,
-    };
-
     const browser = await puppeteer.launch({
       args: ['--no-sandbox'],
       headless: true,
     });
+    const page = await browser.newPage();
 
-    var page = await browser.newPage();
-
-    await page.goto(`data:text/html;charset=UTF-8,${html}`, {
-      waitUntil: 'networkidle0',
-    });
-
-    await page._client.send('Page.setDownloadBehavior', {behavior: 'allow', downloadPath: '/home/me/stuff'});
-
-    // await page.pdf(options);
+    await page.setContent(html, {waitUntil: 'networkidle0'});
+    const response = await page.pdf({path: 'hn.pdf', format: 'a4'});
     await browser.close();
+    return response;
   } catch (err) {
-    console.log('err: ', err);
+    throw err;
   }
 }
 
-const data = {
-  title: 'A new Brazilian School',
-  date: '05/12/2018',
-  name: 'Rodolfo Luis Marcos',
-  age: 28,
-  birthdate: '12/07/1990',
-  course: 'Computer Science',
-  obs: 'Graduated in 2014 by Federal University of Lavras, work with Full-Stack development and E-commerce.',
-};
-
-createPDF(data);
+module.exports = generatePdf;

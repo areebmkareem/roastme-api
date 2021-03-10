@@ -1,93 +1,85 @@
-
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Student's profile</title>
-	<head>
-	<style type="text/css">
-		body{
-			width: 1200px;
-			margin: 0;
-			padding: 0px;
-			font-size: 16px;
-			line-height: 24px;
-			font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
-			color: rgb(33,33,33);
-		}
-		.report-header{
-			background: rgb(55,39,114);
-			color: rgb(255,255,255);
-			padding: 15px;
-			padding-left: 200px;
-			box-sizing: border-box;
-			display: block;
-			position: relative;
-		}
-		.report-header .logo{
-			position: absolute;
-			top: 40px;
-			left: 15px;
-			width: 150px;
-		}
-		.report-footer{
-			background: rgb(55,39,114);
-			color: rgb(255,255,255);
-			padding: 15px;
-			box-sizing: border-box;
-			display: block;
-			position: relative;
-		}
-		.report-body{
-			width: 70%;
-			display: inline-block;
-			position: relative;
-			padding: 15px;
-			box-sizing: border-box;
-			vertical-align: top;
-		}
-		.report-photo{
-			width: 28%;
-			display: inline-block;
-			position: relative;
-			vertical-align: top;
-			box-sizing: border-box;
-			margin-top: 15px;
-		}
-		.report-photo img{
-			width: 100%;
-		}
-		.report-body .info p{
-			border: rgb(204,204,204) solid 1px;
-			padding: 5px;
-			display: block;
-			position: relative;
-		}
-	</style>
-	<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+.card {
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+  transition: 0.3s;
+
+}
+body{
+    font-family: arial, sans-serif;
+
+}
+
+.container {
+  padding:20px;
+}
+.removeMargin{
+    text-align: center;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 10px;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+td:first-child{
+    font-weight: bold;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
 </head>
 <body>
-	<div class="report-header">
-		<img src="https://www.activfirst.co.uk/wp-content/uploads/logo-example.jpg" class="logo">
-		<h3>{{title}}</h3>
-		<p>{{date}}</p>
-	</div>
-	<div class="report-body">
-		<div class="info">
-			<p>Student: {{name}}</p>
-			<p>OEN: {{oen}}</p>
-			<p>Age: {{age}}</p>
-			<p>Birthdate: {{birthdate}}</p>
-			<p>Course: {{course}}</p>
-		</div>
-		<div class="obs">
-			<p>Obs: {{obs}}</p>
-		</div>
-	</div>
-	<div class="report-photo">
-		<img src="https://avatars1.githubusercontent.com/u/16254838?s=460&v=4">
-	</div>
-	<div class="report-footer">
-		A generic Company - All Rights reserved.
-	</div>
+
+
+
+<div class="card">
+  <div class="container">
+    <h4 class="removeMargin"><b>Invoice Of March 2021</b></h4> 
+    <h5 class="removeMargin"><b>25 Jan 2021</b></h5> 
+    <table>
+        <tr>
+          <td>Total Hours</td>
+          <td>{{totalHours}}</td>
+        </tr>
+        <tr>
+            <td>Charge By Hour</td>
+            <td>$9</td>
+          </tr>
+          <tr>
+            <td>Dollar Rate</td>
+            <td>72.2</td>
+          </tr>
+          <tr>
+            <td>Subtoal</td>
+            <td>15000</td>
+          </tr>
+          <tr>
+            <td>Tax</td>
+            <td>1280(5%)</td>
+          </tr>
+          <tr>
+            <td>Paid</td>
+            <td>12000</td>
+          </tr>
+          <tr>
+            <td>Commission</td>
+            <td>120</td>
+          </tr>
+          
+      </table>
+  </div>
+</div>
+
 </body>
-</html>
+</html> 

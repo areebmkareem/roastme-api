@@ -20,7 +20,7 @@ const limiter = rateLimit({
 
 //  apply to all requests
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 const app = express();
 
