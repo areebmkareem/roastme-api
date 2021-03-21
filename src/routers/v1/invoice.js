@@ -21,13 +21,31 @@ const defaultSkip = 0;
  */
 
 router.post('/invoice', auth, isEmailVerified, async (req, res) => {
-  const data = req.body;
-  let filePath = await generatePdf(data); //   const data = {};
+  const user = req.user;
+  let data = req.body;
+  data.userId = user._id;
+  // let filePath = await generatePdf(data); //   const data = {};
   let invoice = new Invoice(data);
-  await invoice.save();
-  res.download(filePath, () => {
-    fs.unlinkSync(filePath, () => {});
-  });
+  let response = await invoice.save();
+
+  res.send({success: true, data: response});
+  // res.download(filePath, () => {
+  //   fs.unlinkSync(filePath, () => {});
+  // });
+});
+
+router.get('/invoice', auth, isEmailVerified, async (req, res) => {
+  const user = req.user;
+  const filter = {
+    userId: user._id,
+  };
+  let payload = await Invoice.find(filter);
+  let totalCount = await Invoice.countDocuments(filter);
+  const data = {
+    totalCount,
+    payload,
+  };
+  res.send({success: true, data});
 });
 
 module.exports = router;
