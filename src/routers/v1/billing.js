@@ -18,6 +18,7 @@ const defaultSkip = 0;
  * @apiGroup Bills
  * @apiName createBill
  * @apiHeader {String} token  Mandatory users unique token.
+ *
  */
 
 router.post('/create-bill', auth, isEmailVerified, async (req, res) => {

@@ -10,7 +10,8 @@ async function generatePdf(data) {
     var template = handlebars.compile(templateHtml);
     var html = template(data);
     const browser = await puppeteer.launch({
-      args: ['--no-sandbox'],
+      ignoreDefaultArgs: ['--disable-extensions'],
+      args: ['--no-sandbox', '--disable-setuid-sandbox'],
       headless: true,
     });
     const page = await browser.newPage();
