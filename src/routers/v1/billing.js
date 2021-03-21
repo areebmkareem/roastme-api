@@ -1,6 +1,6 @@
 const express = require('express');
 const router = new express.Router();
-
+const fs = require('fs');
 const User = require('../../models/user');
 const ContactRequest = require('../../models/contactRequest');
 const auth = require('../../controllers/auth');
@@ -22,12 +22,10 @@ const defaultSkip = 0;
 
 router.post('/create-bill', auth, isEmailVerified, async (req, res) => {
   const data = req.body;
-  console.log('data: ', data);
-  let generatedFile = await generatePdf(data); //   const data = {};
-  console.log('generatedFile: ', generatedFile);
-  res.download(generatedFile);
-  //   res.contentType("application/pdf");
-  //   res.send(generatedFile);
+  let filePath = await generatePdf(data); //   const data = {};
+  res.download(filePath, () => {
+    fs.unlinkSync(filePath, () => {});
+  });
 });
 
 module.exports = router;

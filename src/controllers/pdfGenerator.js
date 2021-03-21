@@ -16,9 +16,10 @@ async function generatePdf(data) {
     const page = await browser.newPage();
 
     await page.setContent(html, {waitUntil: 'networkidle0'});
-    const response = await page.pdf({path: 'hn.pdf', format: 'a4'});
+    let fileName = new Date() + '.pdf';
+    const response = await page.pdf({path: fileName, format: 'a4'});
     await browser.close();
-    return response;
+    return fileName;
   } catch (err) {
     throw err;
   }
