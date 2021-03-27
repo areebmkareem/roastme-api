@@ -3,6 +3,18 @@ const path = require('path');
 const puppeteer = require('puppeteer');
 const handlebars = require('handlebars');
 
+async function getHtmlTemplate(data) {
+  try {
+    // path.join(__dirname + '../HtmlTemplates', 'billing.html'
+    var templateHtml = fs.readFileSync(path.join(process.cwd() + '/src/HtmlTemplates', 'billing.html'), 'utf8');
+    var template = handlebars.compile(templateHtml);
+    var html = template(data);
+    return html;
+  } catch (err) {
+    throw err;
+  }
+}
+
 async function generatePdf(data) {
   try {
     // path.join(__dirname + '../HtmlTemplates', 'billing.html'
@@ -26,4 +38,4 @@ async function generatePdf(data) {
   }
 }
 
-module.exports = generatePdf;
+module.exports = {generatePdf, getHtmlTemplate};

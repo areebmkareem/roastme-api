@@ -4,11 +4,12 @@ const fs = require('fs');
 const Invoice = require('../../models/invoice');
 const ContactRequest = require('../../models/contactRequest');
 const auth = require('../../controllers/auth');
-const generatePdf = require('../../controllers/pdfGenerator');
+const html = require('../../controllers/pdfGenerator');
 
 const checkRequiredFields = require('../../helper/checkRequiredFields');
 
 const isEmailVerified = require('../../controllers/emailVerified');
+const {sendInvoiceEmail} = require('../../emails/account');
 
 const defaultLimit = 10;
 const defaultSkip = 0;
@@ -34,6 +35,13 @@ router.post('/invoice', auth, isEmailVerified, async (req, res) => {
   // });
 });
 
+router.post('/invoice-send', auth, isEmailVerified, async (req, res) => {
+  const user = req.user;
+  let data = req.body;
+  const generatedHtml = await html.getHtmlTemplate(data);
+  await sendInvoiceEmail({mailTo: data.mailTo, html: generatedHtml});
+  res.send({success: true, message: 'Email Send!'});
+});
 router.get('/invoice', auth, isEmailVerified, async (req, res) => {
   const user = req.user;
   const filter = {

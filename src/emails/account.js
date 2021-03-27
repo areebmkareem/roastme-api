@@ -14,6 +14,17 @@ const sendWelcomeEmail = async (email, name) => {
   } catch (err) {}
 };
 
+const sendInvoiceEmail = async (payload) => {
+  try {
+    await sgMail.send({
+      to: payload.mailTo,
+      from: 'noreplay@roastme.io',
+      subject: 'Invoice Bill',
+      text: `Invoice Details`,
+      html: payload.html,
+    });
+  } catch (error) {}
+};
 const sendVerificationEmail = async (email, name, otp) => {
   try {
     await sgMail.send({
@@ -194,4 +205,5 @@ const sendVerificationEmail = async (email, name, otp) => {
 module.exports = {
   sendWelcomeEmail,
   sendVerificationEmail,
+  sendInvoiceEmail,
 };

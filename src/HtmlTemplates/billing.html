@@ -53,28 +53,31 @@ tr:nth-child(even) {
           <td>{{totalHours}}</td>
         </tr>
         <tr>
-            <td>Charge By Hour</td>
-            <td>$9</td>
+            <td>Per Hour Charge</td>
+            <td>${{perHourCharge}}</td>
           </tr>
           <tr>
             <td>Dollar Rate</td>
-            <td>72.2</td>
+            <td>{{currentDollarRate}}</td>
           </tr>
           <tr>
             <td>Subtoal</td>
-            <td>15000</td>
+            <td>{{subTotalInr}}</td>
           </tr>
           <tr>
             <td>Tax</td>
-            <td>1280(5%)</td>
+            <td>{{tax}}</td>
           </tr>
+         
+         
           <tr>
             <td>Paid</td>
-            <td>12000</td>
+            <td>{{creditedToAccount}}</td>
           </tr>
+
           <tr>
             <td>Commission</td>
-            <td>120</td>
+            <td>{{commissionInInr}}</td>
           </tr>
           
       </table>
