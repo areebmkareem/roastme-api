@@ -5,7 +5,7 @@ const Invoice = require('../../models/invoice');
 const ContactRequest = require('../../models/contactRequest');
 const auth = require('../../controllers/auth');
 const html = require('../../controllers/pdfGenerator');
-
+const dayjs = require('dayjs');
 const checkRequiredFields = require('../../helper/checkRequiredFields');
 
 const isEmailVerified = require('../../controllers/emailVerified');
@@ -38,6 +38,8 @@ router.post('/invoice', auth, isEmailVerified, async (req, res) => {
 router.post('/invoice-send', auth, isEmailVerified, async (req, res) => {
   const user = req.user;
   let data = req.body;
+  data.month = dayjs(data.billingDate).format('MMM YYYY');
+  data.billingDate = dayjs(data.billingDate).format('MMM DD YYYY');
   const generatedHtml = await html.getHtmlTemplate(data);
   await sendInvoiceEmail({mailTo: data.mailTo, html: generatedHtml});
   res.send({success: true, message: 'Email Send!'});
